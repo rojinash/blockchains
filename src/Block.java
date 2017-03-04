@@ -26,17 +26,21 @@ public class Block {
 			
 			if (h.isValid()) {
 				nonce = l;
+				currHash = h;
 				break;
 			}
 		}
-
 	}
 
-	public Block(int num, int amount, Hash prevHash, long nonce) {
+	public Block(int num, int amount, Hash prevHash, long nonce) throws NoSuchAlgorithmException {
 		this.num = num;
 		this.amount = amount;
 		this.prevHash = prevHash;
 		this.nonce = nonce;
+		
+		// Calculate hash
+		byte[] b = ByteBuffer.allocate(8).putInt((int) amount + (int) nonce).array();
+		this.currHash = new Hash(calculateHash(b.toString()));
 	}
 	
 	public int getNum() { return num; }
