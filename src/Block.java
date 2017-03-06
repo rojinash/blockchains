@@ -16,14 +16,23 @@ public class Block {
 		this.amount = amount;
 		this.prevHash = prevHash;
 
-		// Mining; loops until it finds a valid nonce
+		// Special case when we do not have a previous Hash, i.e. the first block
+		if (prevHash == null) { prevHash = new Hash(new byte[8]); }
+		
+		// Mines for nonce; loops until it finds a nonce which generates a valid hash
+		System.out.println("Mining...");
 		Random r = new Random(); // Create random generator
 		while (true) {
-			long l = r.nextLong(); // New random long to try
+			long l = r.nextLong();
 
-			byte[] b = ByteBuffer.allocate(8).putLong((long) amount + (long) l).array();
-			Hash h = new Hash(calculateHash(b.toString()));
-			System.out.println(h.toString());
+			// Try calculating hash
+			byte[] b = ByteBuffer.allocate(48)
+					.putInt(num)
+					.putInt(amount)
+					.put(prevHash.getData())
+					.putLong(l)
+					.array();
+			Hash h = new Hash(calculateHash(b));
 			if (h.isValid()) {
 				nonce = l;
 				currHash = h;
@@ -39,8 +48,13 @@ public class Block {
 		this.nonce = nonce;
 		
 		// Calculate hash
-		byte[] b = ByteBuffer.allocate(8).putInt((int) amount + (int) nonce).array();
-		this.currHash = new Hash(calculateHash(b.toString()));
+		byte[] b = ByteBuffer.allocate(48)
+				.putInt(num)
+				.putInt(amount)
+				.put(prevHash.getData())
+				.putLong(nonce)
+				.array();
+		this.currHash = new Hash(calculateHash(b));
 	}
 	
 	public int getNum() { return num; }
@@ -58,9 +72,9 @@ public class Block {
 				num, amount, nonce, prevHash.toString(), currHash.toString());
 	}
 	
-	public static byte[] calculateHash(String msg) throws NoSuchAlgorithmException {
+	public static byte[] calculateHash(byte[] byteArray) throws NoSuchAlgorithmException {
 	    MessageDigest md = MessageDigest.getInstance("sha-256");
-	    md.update(msg.getBytes());
+	    md.update(byteArray);
 	    byte[] hash = md.digest();
 	    return hash;
 	}

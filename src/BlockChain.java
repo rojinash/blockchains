@@ -20,7 +20,7 @@ public class BlockChain {
 	}
 	
 	public BlockChain(int initial) throws NoSuchAlgorithmException {
-		Block newBlock = new Block(0, initial, null, 9324351);
+		Block newBlock = new Block(0, initial, null);
 		Node newNode = new Node(newBlock, null);
 		
 		first = newNode;
@@ -44,6 +44,7 @@ public class BlockChain {
 		
 		updateSums(blk.getAmount());
 		last.next = newNode;
+		last = last.next;
 	}
 
 	public boolean removeLast() {
@@ -51,7 +52,7 @@ public class BlockChain {
 		
 		// Traverse through list
 		Node tmp = first;
-		while (tmp.next != last) {
+		while (tmp.next.next != null) {
 			tmp = tmp.next;
 		}
 		updateSums(-tmp.next.block.getAmount());
@@ -79,14 +80,6 @@ public class BlockChain {
 	}
 	
 	public void printBalances() {
-		Node tmp = first.next;
-		int sumAlice = first.block.getAmount();
-		int sumBob = 0;
-		while (tmp != null) {
-			sumAlice += tmp.block.getAmount();
-			sumBob -= tmp.block.getAmount();
-		}
-		
 		System.out.println("Alice: " + sumAlice + ", " + "Bob: " + sumBob);
 	}
 	
@@ -106,9 +99,4 @@ public class BlockChain {
 		sumBob -= amount;
 	}
 	
-	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
-	}
-
 }

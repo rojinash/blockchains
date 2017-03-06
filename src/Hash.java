@@ -22,11 +22,10 @@ public class Hash {
 	}
 	
 	public String toString() {
-		
 		String ret = "";
 		for (int i = 0; i < data.length; i++) {
 			int d = Byte.toUnsignedInt(data[i]);
-			ret = String.format("%s%02X", ret, d);
+			ret = String.format("%s%02x", ret, d);
 		}
 
 		return ret;
@@ -43,18 +42,5 @@ public class Hash {
 		}
 	
 		return false;
-	}
-	
-	public static void main(String[] args) {
-		byte[] data = {0x00, 0x00, 0x00, 0x2f, 0x21, 0x03};
-		Hash h = new Hash(data);
-		if (h.isValid()) {
-			System.out.println("valid!");
-			System.out.println("hash: " + h.toString());
-		} else {
-
-			System.out.println("nope!");
-			System.out.println("hash: " + h.toString());
-		}
 	}
 }
