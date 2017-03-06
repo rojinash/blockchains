@@ -11,6 +11,13 @@ public class Block {
 	private long nonce;
 	private Hash currHash;
 	
+	/**
+	 * Constructor method
+	 * @param num the index of the block
+	 * @param amount the amount of money transferred to Alice. Negative values indicate a transfer from Alice to Bob.
+	 * @param prevHash the hash of the previous block in the chain
+	 * @throws NoSuchAlgorithmException
+	 */
 	public Block(int num, int amount, Hash prevHash) throws NoSuchAlgorithmException {
 		this.num = num;
 		this.amount = amount;
@@ -41,6 +48,14 @@ public class Block {
 		}
 	}
 
+	/**
+	 * Constructor method
+	 * @param num the index of the block
+	 * @param amount the amount of money transferred to Alice. Negative values indicate a transfer from Alice to Bob.
+	 * @param prevHash the hash of the previous block in the chain
+	 * @param nonce the supplied nonce of the block in question
+	 * @throws NoSuchAlgorithmException
+	 */
 	public Block(int num, int amount, Hash prevHash, long nonce) throws NoSuchAlgorithmException {
 		this.num = num;
 		this.amount = amount;
@@ -57,12 +72,16 @@ public class Block {
 		this.currHash = new Hash(calculateHash(b));
 	}
 	
+	// getters
 	public int getNum() { return num; }
 	public int getAmount() { return amount; }
 	public long getNonce() { return nonce; }
 	public Hash getPrevHash() { return prevHash; }
 	public Hash getHash() { return currHash; }
 	
+	/**
+	 * @return string representation of the current block
+	 */
 	public String toString() {
 		if (prevHash == null) {
 			return String.format("Block %d (Amount: %d, Nonce: %d, prevHash: %s, hash: %s)", 
@@ -72,6 +91,11 @@ public class Block {
 				num, amount, nonce, prevHash.toString(), currHash.toString());
 	}
 	
+	/**
+	 * @param byteArray the data to transform using the SHA-256 algorithm
+	 * @returna a 32-byte hash from the given data
+	 * @throws NoSuchAlgorithmException
+	 */
 	public static byte[] calculateHash(byte[] byteArray) throws NoSuchAlgorithmException {
 	    MessageDigest md = MessageDigest.getInstance("sha-256");
 	    md.update(byteArray);

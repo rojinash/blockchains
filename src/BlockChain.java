@@ -8,10 +8,16 @@ public class BlockChain {
 	private int sumAlice;
 	private int sumBob;
 	
+	// Wrapper Node class for each block
 	private static class Node {
 		public Block block;
 		public Node next;
 		
+		/**
+		 * Node constructor
+		 * @param block the block for the node to wrap around
+		 * @param next the next node
+		 */
 		public Node(Block block, Node next) {
 			this.block = block;
 			this.next = next;
@@ -19,6 +25,11 @@ public class BlockChain {
 		
 	}
 	
+	/**
+	 * Constructor method for BlockChain
+	 * @param initial the initial amount that Alice starts off with
+	 * @throws NoSuchAlgorithmException
+	 */
 	public BlockChain(int initial) throws NoSuchAlgorithmException {
 		Block newBlock = new Block(0, initial, null);
 		Node newNode = new Node(newBlock, null);
@@ -30,12 +41,24 @@ public class BlockChain {
 		sumBob = 0;
 	}
 	
+	/**
+	 * @param amount the amount involved in the transaction
+	 * @return a Block object with the appropriate nonce and hash
+	 * @throws NoSuchAlgorithmException
+	 */
 	public Block mine(int amount) throws NoSuchAlgorithmException {
 		return new Block(last.block.getNum() + 1, amount, last.block.getHash());
 	}
 	
+	/**
+	 * @return the number of nodes in the BlockChain
+	 */
 	public int getSize() { return last.block.getNum() + 1; }
 	
+	/**
+	 * Appends a new node encompassing a given block
+	 * @param blk the block to append
+	 */
 	public void append(Block blk) {
 		Node newNode = new Node(blk, null);
 		
@@ -47,6 +70,10 @@ public class BlockChain {
 		last = last.next;
 	}
 
+	/**
+	 * Removes the last node in the BlockChain
+	 * @return true if a node was removed, false if nothing was removed
+	 */
 	public boolean removeLast() {
 		if (last == first) { return false; }
 		
@@ -60,8 +87,14 @@ public class BlockChain {
 		return true;
 	}
 	
+	/**
+	 * @return the Hash of the last Block in the BlockChain
+	 */
 	public Hash getHash() { return last.block.getHash(); }
 	
+	/**
+	 * @return whether or not the BlockChain has valid hashes, matching prevHashes, and valid sums of money for both Alice and Bob
+	 */
 	public boolean isValidBlockChain() {
 		Node tmp = first;
 		while (tmp.next != null) {
@@ -79,10 +112,16 @@ public class BlockChain {
 		return true;
 	}
 	
+	/**
+	 * print balance of Alice and Bob
+	 */
 	public void printBalances() {
 		System.out.println("Alice: " + sumAlice + ", " + "Bob: " + sumBob);
 	}
 	
+	/**
+	 * @return string representation of the whole BlockChain, one node on one line
+	 */
 	public String toString() {
 		String ret = "";
 		
@@ -94,6 +133,10 @@ public class BlockChain {
 		return ret;
 	}
 	
+	/**
+	 * Updates the total amounts of money that Alice and Bob has, given the amount transferred
+	 * @param amount amount transferred from Bob to Alice
+	 */
 	private void updateSums(int amount) {
 		sumAlice += amount;
 		sumBob -= amount;
